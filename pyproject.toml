@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "calculation-pipeline"
+version = "0.1.0"
+description = ""
+authors = ["Miguel Garcia Casas <miguel.g.c.505@gmail.com>"]
+readme = "README.md"
+packages = [{include = "calculation_pipeline"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
