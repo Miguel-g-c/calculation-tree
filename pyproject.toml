@@ -1,14 +1,19 @@
 [tool.poetry]
-name = "calculation-pipeline"
+name = "calculation-tree"
 version = "0.1.0"
 description = ""
 authors = ["Miguel Garcia Casas <miguel.g.c.505@gmail.com>"]
 readme = "README.md"
-packages = [{include = "calculation_pipeline"}]
+packages = [{include = "calculation_tree"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.991"
+black = "^22.12.0"
+pytest = "^7.2.1"
 
 [build-system]
 requires = ["poetry-core"]
