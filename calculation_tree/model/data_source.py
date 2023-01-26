@@ -12,10 +12,22 @@ class DataSource(Node):
     def __init__(
         self,
         name: str,
+        description: str | None = None,
+        year: int | None = None,
         child: Variable | None = None,
         id_: uuid.UUID | None = None,
     ) -> None:
         super().__init__(name, None, child, id_)
+        self._description = description
+        self._year = year
 
     def __str__(self) -> str:
-        return f"{self.name}"
+        return f"{self.name} ({self.year})"
+
+    @property
+    def description(self) -> str | None:
+        return self._description
+
+    @property
+    def year(self) -> int | None:
+        return self._year
