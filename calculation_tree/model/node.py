@@ -1,6 +1,11 @@
 from __future__ import annotations
-from typing import Sequence
+from typing import Any, Protocol, Sequence
 import uuid
+
+
+class TraverseCallback(Protocol):
+    def __call__(self, node: Node, **kwarg: Any) -> None:
+        ...
 
 
 class Node:
@@ -75,3 +80,8 @@ class Node:
 
     def is_parent_of(self, node: Node) -> bool:
         return node == self.child
+
+    def traverse(self, callback: TraverseCallback, **kwargs: Any) -> None:
+        callback(self, **kwargs)
+        for parent in self.parents:
+            parent.traverse(callback, **kwargs)

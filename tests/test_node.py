@@ -68,3 +68,20 @@ def test_node_final_result():
     node2 = Node("node2", child=node1)
     node3 = Node("node3", child=node2)
     assert node3.final_result == node1
+
+
+def test_node_traverse():
+    node1 = Node("node1")
+    node2 = Node("node2", child=node1)
+    node1._parents = [node2]
+    node3 = Node("node3", child=node2)
+    node2._parents = [node3]
+
+    traversed_nodes = []
+
+    def collect(node: Node, acc: list[Node]) -> None:
+        acc.append(node)
+
+    node1.traverse(collect, acc=traversed_nodes)
+
+    assert traversed_nodes == [node1, node2, node3]
