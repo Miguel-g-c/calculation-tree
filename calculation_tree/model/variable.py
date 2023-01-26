@@ -34,6 +34,8 @@ class Variable(Node):
 
     def __add__(self, other: Variable) -> Variable:
         operation = Operation("add", parents=[self, other])
+        self._child = operation
+        other._child = operation
         new_variable = Variable(
             f"{self.name} + {other.name}",
             self.value + other.value,
@@ -44,6 +46,8 @@ class Variable(Node):
 
     def __sub__(self, other: Variable) -> Variable:
         operation = Operation("sub", parents=[self, other])
+        self._child = operation
+        other._child = operation
         new_variable = Variable(
             f"{self.name} - {other.name}",
             self.value - other.value,
@@ -54,6 +58,8 @@ class Variable(Node):
 
     def __mul__(self, other: Variable) -> Variable:
         operation = Operation("mul", parents=[self, other])
+        self._child = operation
+        other._child = operation
         new_variable = Variable(
             f"{self.name} * {other.name}",
             self.value * other.value,
@@ -64,6 +70,8 @@ class Variable(Node):
 
     def __truediv__(self, other: Variable) -> Variable:
         operation = Operation("truediv", parents=[self, other])
+        self._child = operation
+        other._child = operation
         new_variable = Variable(
             f"{self.name} / {other.name}",
             self.value / other.value,
@@ -74,6 +82,8 @@ class Variable(Node):
 
     def __pow__(self, other: Variable) -> Variable:
         operation = Operation("pow", parents=[self, other])
+        self._child = operation
+        other._child = operation
         new_variable = Variable(
             f"{self.name} ** {other.name}",
             self.value**other.value,
@@ -84,6 +94,7 @@ class Variable(Node):
 
     def __neg__(self) -> Variable:
         operation = Operation("neg", parents=[self])
+        self._child = operation
         new_variable = Variable(
             f"-{self.name}",
             -self.value,
@@ -94,6 +105,7 @@ class Variable(Node):
 
     def __abs__(self) -> Variable:
         operation = Operation("abs", parents=[self])
+        self._child = operation
         new_variable = Variable(
             f"abs({self.name})",
             abs(self.value),
