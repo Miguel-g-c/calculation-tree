@@ -15,3 +15,14 @@ def test_final_result():
         var2 = ctx.variables.create("var2", 2)
         var3 = var1 + var2
         assert ctx.final_result == var3
+
+
+def test_traverse():
+    with CalculationContext() as ctx:
+        var1 = ctx.variables.create("var1", 1)
+        var2 = ctx.variables.create("var2", 2)
+        var3 = var1 + var2
+        op = var3.parents[0]
+        acc = []
+        ctx.traverse(lambda n: acc.append(n))
+        assert acc == [var3, op, var1, var2]

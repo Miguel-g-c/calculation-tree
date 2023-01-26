@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import Iterator
+from typing import Any, Iterator
 from calculation_tree.services.collections import (
     VariableCollection,
     DataSourceCollection,
     OperationCollection,
 )
 from calculation_tree.model import Node
+from calculation_tree.model.node import TraverseCallback
 
 
 class CalculationContext:
@@ -24,13 +25,17 @@ class CalculationContext:
 
     @property
     def nodes(self) -> Iterator[Node]:
-        yield from self.variables
-        yield from self.operations
         yield from self.data_sources
+        yield from self.operations
+        yield from self.variables
 
     @property
     def final_result(self) -> Node | None:
-        n = next(self.nodes, None)
-        if n:
+        if n := next(self.nodes, None):
             return n.final_result
         return None
+
+    def traverse(self, callback: TraverseCallback, **kwargs: Any) -> None:
+        if not self.final_result:
+            return
+        return self.final_result.traverse(callback, **kwargs)
