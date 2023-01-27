@@ -92,10 +92,6 @@ class Variable(Node):
     def __operate_with(
         self, other: Variable, op_name: str, var_name: str, var_value: NUMERIC
     ) -> Variable:
-        if not isinstance(other, Variable):
-            raise TypeError(
-                f"Unsupported operand type(s) for: 'Variable' and '{type(other)}'"
-            )
         operation = Operation(op_name, parents=[self, other])
         self._child = operation
         other._child = operation
