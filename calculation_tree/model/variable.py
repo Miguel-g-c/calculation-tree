@@ -1,5 +1,6 @@
 from __future__ import annotations
 from decimal import Decimal
+from typing import Any
 import uuid
 
 from calculation_tree.model import Node, Operation
@@ -117,3 +118,6 @@ class Variable(Node):
     @property
     def value(self) -> float:
         return self._value
+
+    def to_dict(self) -> dict[str, Any]:
+        return super()._to_dict(value=self.value)

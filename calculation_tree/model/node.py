@@ -93,3 +93,15 @@ class Node:
         for i, parent in enumerate(self.parents):
             tree += parent.render_tree(depth + 1, i == len(self.parents) - 1)
         return tree
+
+    def to_dict(self) -> dict[str, Any]:
+        return self._to_dict()
+
+    def _to_dict(self, **kwargs: Any) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "type": type(self).__name__,
+            "name": self.name,
+            **kwargs,
+            "parents": [p.to_dict() for p in self.parents],
+        }

@@ -44,3 +44,8 @@ class CalculationContext:
         if not self.final_result:
             return
         return self.final_result.traverse(callback, **kwargs)
+
+    def to_dict(self) -> dict:
+        if not self.final_result:
+            return {}
+        return self.final_result.to_dict()

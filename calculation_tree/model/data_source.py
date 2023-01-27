@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 import uuid
 
 from calculation_tree.model import Node
@@ -31,3 +31,6 @@ class DataSource(Node):
     @property
     def year(self) -> int | None:
         return self._year
+
+    def to_dict(self) -> dict[str, Any]:
+        return super()._to_dict(description=self.description, year=self.year)
