@@ -25,9 +25,6 @@ class Node:
         class_name = type(self).__name__
         return f"{class_name}({self.name})"
 
-    def __str__(self) -> str:
-        return self.name
-
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, type(self)):
             return False
@@ -85,3 +82,14 @@ class Node:
         callback(self, **kwargs)
         for parent in self.parents:
             parent.traverse(callback, **kwargs)
+
+    def render_tree(self, depth: int = 0, final: bool = False) -> str:
+        tree = ""
+        if depth > 0:
+            tree += " " * 4 * (depth - 1) + "│   " + "\n"
+            tree += " " * 4 * (depth - 1) + "├── " if not final else ""
+            tree += " " * 4 * (depth - 1) + "└── " if final else ""
+        tree += str(self) + "\n"
+        for i, parent in enumerate(self.parents):
+            tree += parent.render_tree(depth + 1, i == len(self.parents) - 1)
+        return tree

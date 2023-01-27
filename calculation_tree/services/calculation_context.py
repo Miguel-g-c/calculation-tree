@@ -23,6 +23,11 @@ class CalculationContext:
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         pass
 
+    def __repr__(self) -> str:
+        if not self.final_result:
+            return ""
+        return self.final_result.render_tree()
+
     @property
     def nodes(self) -> Iterator[Node]:
         yield from self.data_sources

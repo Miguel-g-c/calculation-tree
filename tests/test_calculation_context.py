@@ -26,3 +26,8 @@ def test_traverse():
         acc = []
         ctx.traverse(lambda n: acc.append(n))
         assert acc == [var3, op, var1, var2]
+
+
+def test_render_tree():
+    # TODO: implement test and better rendering
+    pass
