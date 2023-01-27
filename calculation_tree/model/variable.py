@@ -34,85 +34,41 @@ class Variable(Node):
         return f"{self.name} = {self.value}"
 
     def __add__(self, other: Variable) -> Variable:
-        operation = Operation("add", parents=[self, other])
-        self._child = operation
-        other._child = operation
-        new_variable = Variable(
-            f"{self.name} + {other.name}",
-            self.value + other.value,
-            parents=[operation],
+        new_variable = self.__operate_with(
+            other, "add", f"{self.name} + {other.name}", self.value + other.value
         )
-        operation._child = new_variable
         return new_variable
 
     def __sub__(self, other: Variable) -> Variable:
-        operation = Operation("sub", parents=[self, other])
-        self._child = operation
-        other._child = operation
-        new_variable = Variable(
-            f"{self.name} - {other.name}",
-            self.value - other.value,
-            parents=[operation],
+        new_variable = self.__operate_with(
+            other, "sub", f"{self.name} - {other.name}", self.value - other.value
         )
-        operation._child = new_variable
         return new_variable
 
     def __mul__(self, other: Variable) -> Variable:
-        operation = Operation("mul", parents=[self, other])
-        self._child = operation
-        other._child = operation
-        new_variable = Variable(
-            f"{self.name} * {other.name}",
-            self.value * other.value,
-            parents=[operation],
+        new_variable = self.__operate_with(
+            other, "mul", f"{self.name} * {other.name}", self.value * other.value
         )
-        operation._child = new_variable
         return new_variable
 
     def __truediv__(self, other: Variable) -> Variable:
-        operation = Operation("truediv", parents=[self, other])
-        self._child = operation
-        other._child = operation
-        new_variable = Variable(
-            f"{self.name} / {other.name}",
-            self.value / other.value,
-            parents=[operation],
+        new_variable = self.__operate_with(
+            other, "truediv", f"{self.name} / {other.name}", self.value / other.value
         )
-        operation._child = new_variable
         return new_variable
 
     def __pow__(self, other: Variable) -> Variable:
-        operation = Operation("pow", parents=[self, other])
-        self._child = operation
-        other._child = operation
-        new_variable = Variable(
-            f"{self.name} ** {other.name}",
-            self.value**other.value,
-            parents=[operation],
+        new_variable = self.__operate_with(
+            other, "pow", f"{self.name} ** {other.name}", self.value**other.value
         )
-        operation._child = new_variable
         return new_variable
 
     def __neg__(self) -> Variable:
-        operation = Operation("neg", parents=[self])
-        self._child = operation
-        new_variable = Variable(
-            f"-{self.name}",
-            -self.value,
-            parents=[operation],
-        )
-        operation._child = new_variable
+        new_variable = self.__operate("neg", f"-{self.name}", -self.value)
         return new_variable
 
     def __abs__(self) -> Variable:
-        operation = Operation("abs", parents=[self])
-        self._child = operation
-        new_variable = Variable(
-            f"abs({self.name})",
-            abs(self.value),
-            parents=[operation],
-        )
-        operation._child = new_variable
+        new_variable = self.__operate("abs", f"abs({self.name})", abs(self.value))
         return new_variable
 
     @property
@@ -121,3 +77,28 @@ class Variable(Node):
 
     def to_dict(self) -> dict[str, Any]:
         return super()._to_dict(value=self.value)
+
+    def __operate(self, op_name: str, var_name: str, var_value: NUMERIC) -> Variable:
+        operation = Operation(op_name, parents=[self])
+        self._child = operation
+        new_variable = Variable(
+            var_name,
+            var_value,
+            parents=[operation],
+        )
+        operation._child = new_variable
+        return new_variable
+
+    def __operate_with(
+        self, other: Variable, op_name: str, var_name: str, var_value: NUMERIC
+    ) -> Variable:
+        if not isinstance(other, Variable):
+            raise TypeError(
+                f"Unsupported operand type(s) for: 'Variable' and '{type(other)}'"
+            )
+        operation = Operation(op_name, parents=[self, other])
+        self._child = operation
+        other._child = operation
+        new_variable = Variable(var_name, var_value, parents=[operation])
+        operation._child = new_variable
+        return new_variable
