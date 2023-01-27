@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 from typing import Any, Iterator
 from calculation_tree.services.collections import (
     VariableCollection,
@@ -45,7 +46,10 @@ class CalculationContext:
             return
         return self.final_result.traverse(callback, **kwargs)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         if not self.final_result:
             return {}
         return self.final_result.to_dict()
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict())
