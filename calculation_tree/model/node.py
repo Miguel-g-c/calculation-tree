@@ -19,7 +19,11 @@ class Node:
         self._id = str(id_) if id_ is not None else str(uuid.uuid4())
         self._name = name
         self._parents = list(parents) if parents is not None else []
+        for parent in self._parents:
+            parent._child = self  # type: ignore
         self._child = child
+        if child is not None and self not in child._parents:
+            child._parents.append(self)
 
     def __repr__(self) -> str:
         class_name = type(self).__name__
