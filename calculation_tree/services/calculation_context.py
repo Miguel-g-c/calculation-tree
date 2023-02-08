@@ -44,10 +44,10 @@ class CalculationContext:
 
     @property
     def nodes(self) -> Iterator[Node]:
+        yield from self.variables
         yield from self.emission_factors.seen
         yield from self.price_indices.seen
         yield from self.conversion_factors.seen
-        yield from self.variables
 
     @property
     def final_result(self) -> Node | None:

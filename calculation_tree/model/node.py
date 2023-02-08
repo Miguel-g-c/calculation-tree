@@ -17,7 +17,7 @@ class Node:
         id_: uuid.UUID | None = None,
     ) -> None:
         self._id = str(id_) if id_ is not None else str(uuid.uuid4())
-        self._name = name
+        self.name = name
         self._parents = list(parents) if parents is not None else []
         for parent in self._parents:
             parent._child = self  # type: ignore
@@ -40,10 +40,6 @@ class Node:
     @property
     def id(self) -> str:
         return self._id
-
-    @property
-    def name(self) -> str:
-        return self._name
 
     @property
     def parents(self) -> list[Node]:

@@ -1,4 +1,4 @@
-from typing import Generic, Iterable, TypeVar
+from typing import Generic, Iterable, TypeVar, overload
 import uuid
 
 from calculation_tree.model import DataSource, Node, Variable
@@ -62,44 +62,76 @@ class FakeRepository(Generic[T]):
             self.seen.add(entity)
         return entity
 
-    def get_by_normid(self, normid: str, year: int, region: str) -> T | None:
-        entity = next(
-            (
-                e
-                for e in self._entities
-                if e.normid == normid and e.year == year and e.region == region
-            ),
-            None,
-        )
+    @overload
+    def get_by_normid(self, normid: str) -> T | None:
+        ...
+
+    @overload
+    def get_by_normid(self, normid: str, region: str) -> T | None:
+        ...
+
+    @overload
+    def get_by_normid(self, normid: str, region: str, year: int) -> T | None:
+        ...
+
+    def get_by_normid(
+        self, normid: str, region: str | None = None, year: int | None = None
+    ) -> T | None:
+        if region and year:
+            entity = next(
+                (
+                    e
+                    for e in self._entities
+                    if e.normid == normid and e.year == year
+                    if year and e.region == region
+                    if region
+                ),
+                None,
+            )
+        elif region:
+            entity = next(
+                (
+                    e
+                    for e in self._entities
+                    if e.normid == normid and e.region == region
+                ),
+                None,
+            )
+        else:
+            entity = next((e for e in self._entities if e.normid == normid), None)
         if entity:
             self.seen.add(entity)
         return entity
 
 
 def generate_price_indices() -> Iterable[PriceIndex]:
-    source = DataSource(
+    source1 = DataSource(
         "Eurostat",
         "Producer price indices dataset",
-        2022,
-        id_=uuid.UUID("8d4ac02a-bb32-4c29-b0b8-201062d828bd"),
+        2021,
+    )
+    source2 = DataSource(
+        "Eurostat",
+        "Producer price indices dataset",
+        2023,
     )
     yield PriceIndex(
         "02030000000000",
         2021,
         "SE",
-        "Electric power generation, transmission and distribution",
+        "Electric power generation",
         150,
         id_=uuid.UUID("fb6f139d-ec08-4e1b-bcb2-422d5dc32d55"),
-        parents=[source],
+        parents=[source1],
     )
     yield PriceIndex(
         "02030000000000",
         2023,
         "SE",
-        "Electric power generation, transmission and distribution",
+        "Electric power generation",
         175,
         id_=uuid.UUID("35fe5f8b-88bc-46b2-a6cb-f77bbf4f454c"),
-        parents=[source],
+        parents=[source2],
     )
 
 
