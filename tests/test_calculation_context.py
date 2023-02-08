@@ -1,12 +1,13 @@
+from calculation_tree.model import DataSource
 from calculation_tree.services.calculation_context import CalculationContext
 
 
 def test_nodes_iterator():
     with CalculationContext() as ctx:
-        var = ctx.variables.create("var", 1)
-        ds = ctx.data_sources.create("ds", "", 2020)
-        op = ctx.operations.create("op")
-        assert set(ctx.nodes) == {var, ds, op}
+        var1 = ctx.variables.create("var1", 1)
+        ef = ctx.emission_factors.get("0904eaa8-c828-4f20-bb7c-cf9d7556feb3")
+        ppi = ctx.price_indices.get("35fe5f8b-88bc-46b2-a6cb-f77bbf4f454c")
+        assert set(ctx.nodes) == {var1, ef, ppi}
 
 
 def test_final_result():
@@ -35,7 +36,7 @@ def test_render_tree():
 
 def test_to_dict():
     with CalculationContext() as ctx:
-        ds = ctx.data_sources.create("IEA", "", 2020)
+        ds = DataSource("IEA", "", 2020)
         var1 = ctx.variables.create("var1", 1, parents=[ds])
         var3 = -var1
         var2 = ctx.variables.create("var2", 2)

@@ -81,6 +81,7 @@ def generate_price_indices() -> Iterable[PriceIndex]:
         "Eurostat",
         "Producer price indices dataset",
         2022,
+        id_=uuid.UUID("8d4ac02a-bb32-4c29-b0b8-201062d828bd"),
     )
     yield PriceIndex(
         "02030000000000",
@@ -88,6 +89,7 @@ def generate_price_indices() -> Iterable[PriceIndex]:
         "SE",
         "Electric power generation, transmission and distribution",
         150,
+        id_=uuid.UUID("fb6f139d-ec08-4e1b-bcb2-422d5dc32d55"),
         parents=[source],
     )
     yield PriceIndex(
@@ -96,6 +98,7 @@ def generate_price_indices() -> Iterable[PriceIndex]:
         "SE",
         "Electric power generation, transmission and distribution",
         175,
+        id_=uuid.UUID("35fe5f8b-88bc-46b2-a6cb-f77bbf4f454c"),
         parents=[source],
     )
 
@@ -105,6 +108,7 @@ def generate_conversion_factors() -> Iterable[ConversionFactor]:
         "IEA Energy Prices",
         "",
         2022,
+        id_=uuid.UUID("717b3be3-8044-4728-ac14-4f3de8a4b76c"),
     )
     yield ConversionFactor(
         "02030000000000",
@@ -113,6 +117,7 @@ def generate_conversion_factors() -> Iterable[ConversionFactor]:
         "Industrial electricity",
         0.068,
         parents=[source],
+        id_=uuid.UUID("a9c8cb1a-8e02-4b53-bf1f-6a6b9600a77b"),
     )
 
 
@@ -121,6 +126,7 @@ def generate_emission_factors() -> Iterable[EmissionFactor]:
         "AIB",
         "",
         2022,
+        id_=uuid.UUID("74c5676d-5b8b-43ae-b092-3203a34dfb6e"),
     )
     yield EmissionFactor(
         "02030000000000",
@@ -129,4 +135,5 @@ def generate_emission_factors() -> Iterable[EmissionFactor]:
         "Electricity",
         0.07663,
         parents=[source],
+        id_=uuid.UUID("0904eaa8-c828-4f20-bb7c-cf9d7556feb3"),
     )

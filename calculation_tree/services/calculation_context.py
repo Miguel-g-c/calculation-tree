@@ -3,22 +3,35 @@ import json
 from typing import Any, Iterator
 from calculation_tree.services.collections import (
     VariableCollection,
-    DataSourceCollection,
-    OperationCollection,
 )
 from calculation_tree.model import Node
 from calculation_tree.model.node import TraverseCallback
+from calculation_tree.services.mocks import (
+    ConversionFactor,
+    EmissionFactor,
+    FakeRepository,
+    PriceIndex,
+    generate_conversion_factors,
+    generate_emission_factors,
+    generate_price_indices,
+)
 
 
 class CalculationContext:
-    data_sources: DataSourceCollection
     variables: VariableCollection
-    operations: OperationCollection
+    emission_factors: FakeRepository[EmissionFactor]
+    price_indices: FakeRepository[PriceIndex]
+    conversion_factors: FakeRepository[ConversionFactor]
 
     def __enter__(self) -> CalculationContext:
-        self.data_sources = DataSourceCollection()
         self.variables = VariableCollection()
-        self.operations = OperationCollection()
+        self.emission_factors = FakeRepository[EmissionFactor](
+            generate_emission_factors()
+        )
+        self.price_indices = FakeRepository[PriceIndex](generate_price_indices())
+        self.conversion_factors = FakeRepository[ConversionFactor](
+            generate_conversion_factors()
+        )
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
@@ -31,8 +44,9 @@ class CalculationContext:
 
     @property
     def nodes(self) -> Iterator[Node]:
-        yield from self.data_sources
-        yield from self.operations
+        yield from self.emission_factors.seen
+        yield from self.price_indices.seen
+        yield from self.conversion_factors.seen
         yield from self.variables
 
     @property
