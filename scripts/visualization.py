@@ -34,7 +34,8 @@ def repr_node(n) -> str:
 
 
 def populate_graph(node: Node):
-    G.add_node(node.id, type=type(node).__name__, repr=repr_node(node))
+    node_type = "FinalResult" if node.is_leaf else type(node).__name__
+    G.add_node(node.id, type=node_type, repr=repr_node(node))
     if node.child:
         G.add_edge(node.id, node.child.id)
 
@@ -98,6 +99,14 @@ with CalculationContext() as ctx:
 # Visualize the graph
 
 pos = nx.spring_layout(G)
+nx.draw_networkx_nodes(
+    G,
+    pos,
+    nodelist=[k for k, v in G.nodes.data("type") if v == "FinalResult"],
+    node_size=1300,
+    node_color="gold",
+    node_shape="*",
+)
 nx.draw_networkx_nodes(
     G,
     pos,
