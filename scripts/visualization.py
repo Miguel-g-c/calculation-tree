@@ -69,13 +69,9 @@ with CalculationContext() as ctx:
     transaction = ctx.variables.create(
         "Transaction", compute_transaction.value, parents=[user_data]
     )
-    ef = ctx.emission_factors.get_by_normid(
-        compute_transaction.normid, compute_transaction.region
-    )
-    cf = ctx.conversion_factors.get_by_normid(
-        compute_transaction.normid, compute_transaction.region
-    )
-    assert ef is not None and cf is not None
+    ef = ctx.emission_factors.get_by_normid(compute_transaction.normid)
+    cf = ctx.conversion_factors.get_by_normid(compute_transaction.normid)
+    assert ef and cf
     if cf.year != compute_transaction.year:
         ppi_from = ctx.price_indices.get_by_normid(
             compute_transaction.normid,
@@ -83,17 +79,17 @@ with CalculationContext() as ctx:
             compute_transaction.year,
         )
         ppi_to = ctx.price_indices.get_by_normid(
-            compute_transaction.normid, compute_transaction.region, cf.year
+            compute_transaction.normid,
+            compute_transaction.region,
+            cf.year,
         )
-        assert ppi_from is not None and ppi_to is not None
+        assert ppi_from and ppi_to
         inflation_factor = ppi_to / ppi_from
-        inflation_factor.name = "Inflation correction factor"
         transaction *= inflation_factor
-    activity_amount = transaction * cf
-    activity_amount.name = "Activity amount"
+    activity_amount = transaction / cf
     emissions = activity_amount * ef
-    emissions.name = "Emissions"
     ctx.traverse(populate_graph)  # type: ignore
+
 
 # %%
 # Visualize the graph
